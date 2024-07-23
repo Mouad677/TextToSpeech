@@ -1,4 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<vector xmlns:android="http://schemas.android.com/apk/res/android">
-
-</vector>
+<shape xmlns:android="http://schemas.android.com/apk/res/android">
+    <solid android:color="@color/white" />
+    <stroke android:color="@color/black" android:width="2dp"/>
+    <size android:width="240dp" android:height="180dp"/>
+</shape>
