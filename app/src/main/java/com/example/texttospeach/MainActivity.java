@@ -6,13 +6,20 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
 import android.Manifest;
+import android.animation.ObjectAnimator;
+import android.animation.ValueAnimator;
+import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.drawable.ColorDrawable;
+import android.net.Uri;
 import android.nfc.Tag;
 import android.os.Bundle;
 import android.os.Environment;
 import android.speech.tts.TextToSpeech;
+import android.speech.tts.UtteranceProgressListener;
 import android.util.Log;
 import android.view.View;
+import android.view.animation.LinearInterpolator;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -28,11 +35,11 @@ public class MainActivity extends AppCompatActivity {
     EditText ed1;
     LinearLayout audio_container;
     LinearLayout line_progressor;
-
     ImageView img_bt;
     Button bt_switch, bt_save;
     TextToSpeech txt_speech;
     TextView txt_audioLocation;
+    TextView txt_github;
     private static final int REQUEST_CODE = 1;
     private static final String TAG = "MainActivity";
     @Override
@@ -45,6 +52,7 @@ public class MainActivity extends AppCompatActivity {
         bt_switch = findViewById(R.id.bt_switch);
         bt_save = findViewById(R.id.bt_save);
         txt_audioLocation = findViewById(R.id.txt_audiolocation);
+        txt_github = findViewById(R.id.txt_github);
 
         if(ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED){
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE} ,REQUEST_CODE);
@@ -54,26 +62,37 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onInit(int status) {
                 if(status!=TextToSpeech.ERROR){
-                    txt_speech.setLanguage(Locale.US);
+                    txt_speech.setLanguage(Locale.ENGLISH);
                 }
             }
         });
+
+
 
         bt_switch.setOnClickListener((View view) ->{
             String txt = ed1.getText().toString();
             if(!txt.isEmpty()){
                 audio_container.setVisibility(View.VISIBLE);
+
                 Toast.makeText(this, "The text was converted to speech!", Toast.LENGTH_SHORT).show();
             }else{
                 Toast.makeText(this, "Nothing to switched!", Toast.LENGTH_SHORT).show();
             }
         });
 
-        img_bt.setOnClickListener(view ->
-                txt_speech.speak(ed1.getText().toString(), TextToSpeech.QUEUE_FLUSH, null));
+        img_bt.setOnClickListener(view -> {
+            txt_speech.speak(ed1.getText().toString(), TextToSpeech.QUEUE_FLUSH, null);
+        });
 
-        bt_save.setOnClickListener(view -> saveAudio(ed1.getText().toString()));
+        bt_save.setOnClickListener(view -> {
+            saveAudio(ed1.getText().toString());
+        });
 
+        txt_github.setOnClickListener(view -> {
+            Uri uri = Uri.parse("https://github.com/Mouad677");
+            Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+            startActivity(intent);
+        });
 
     }
 
@@ -127,4 +146,10 @@ public class MainActivity extends AppCompatActivity {
         }
         super.onDestroy();
     }
+
+
+
+
+
+
 }
